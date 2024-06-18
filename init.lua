@@ -232,6 +232,28 @@ require('lazy').setup({
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
   --
+  -- NOTE: My addition
+  {
+    'natecraddock/workspaces.nvim',
+    opts = {
+      hooks = {
+        open_pre = {
+          -- If recording, save current session state and stop recording
+          'SessionsStop',
+
+          -- delete all buffers (does not save changes)
+          'silent %bdelete!',
+        },
+        open = function()
+          require('sessions').load('.session', { silent = true })
+        end,
+      },
+    },
+  },
+
+  -- NOTE: My addition
+  { 'natecraddock/sessions.nvim', opts = {} },
+
   -- Use `opts = {}` to force a plugin to be loaded.
   --
   --  This is equivalent to:
@@ -369,6 +391,7 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'workspaces')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -382,6 +405,8 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- NOTE: MINE
+      vim.keymap.set('n', '<leader>wo', '<cmd>Telescope workspaces<CR>', { desc = '[Wo]rkspace Select' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
