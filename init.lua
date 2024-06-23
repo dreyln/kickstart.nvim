@@ -245,6 +245,7 @@ require('lazy').setup({
         lualine_y = {
           {
             'swenv',
+            icon = '',
             cond = function()
               return vim.bo.filetype == 'python'
             end,
