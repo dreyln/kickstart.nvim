@@ -234,6 +234,62 @@ require('lazy').setup({
   --
   -- NOTE: My addition
   {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = { 'filename' },
+        lualine_x = { 'fileformat', 'filetype' },
+        lualine_y = {
+          {
+            'swenv',
+            cond = function()
+              return vim.bo.filetype == 'python'
+            end,
+          },
+        },
+        lualine_z = { 'location' },
+      },
+    },
+  },
+  -- NOTE: My addition
+  {
+    'dreyln/swenv.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      -- Should return a list of tables with a `name` and a `path` entry each.
+      -- Gets the argument `venvs_path` set below.
+      -- By default just lists the entries in `venvs_path`.
+      get_venvs = function(venvs_path)
+        return require('swenv.api').get_venvs(venvs_path)
+      end,
+      -- Path passed to `get_venvs`.
+      venvs_path = vim.fn.expand '~/.virtualenvs',
+      -- Something to do after setting an environment, for example call vim.cmd.LspRestart
+      -- post_set_venv = nil,
+      post_set_venv = function()
+        local client = vim.lsp.get_clients({ name = 'basedpyright' })[1]
+        if not client then
+          return
+        end
+        local venv = require('swenv.api').get_current_venv()
+        if not venv then
+          return
+        end
+        local venv_python = venv.path .. '/bin/python'
+        if client.settings then
+          client.settings = vim.tbl_deep_extend('force', client.settings, { python = { pythonPath = venv_python } })
+        else
+          client.config.settings = vim.tbl_deep_extend('force', client.config.settings, { python = { pythonPath = venv_python } })
+        end
+        client.notify('workspace/didChangeConfiguration', { settings = nil })
+      end,
+    },
+  },
+  -- NOTE: My addition
+  {
     'natecraddock/workspaces.nvim',
     opts = {
       hooks = {
@@ -246,6 +302,14 @@ require('lazy').setup({
         },
         open = function()
           require('sessions').load('.session', { silent = true })
+          if vim.fn.filereadable '.venv' then
+            local venv_file = io.open '.venv'
+            if venv_file then
+              local venv = string.gsub(venv_file:read '*a', '%s+', '')
+              require('swenv.api').set_venv(venv)
+              venv_file:close()
+            end
+          end
         end,
       },
     },
@@ -469,7 +533,7 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
-      vim.lsp.set_log_level 'debug'
+      -- vim.lsp.set_log_level 'debug'
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -595,15 +659,20 @@ require('lazy').setup({
         --
 
         basedpyright = {
-          before_init = function(initialize_params, config)
-            local venv = string.gsub(io.open('.venv'):read '*a', '%s+', '')
-            config.settings.venv = venv
-            initialize_params.initializeOptions = {
-              settings = {
-                venv = venv,
-              },
-            }
-          end,
+          -- before_init = function(initialize_params, config)
+          --   local venv = require('swenv.api').get_current_venv()
+          --   if venv ~= nil then
+          --     local venv_python = venv.path .. '/bin/python'
+          --     config.settings.python.pythonPath = venv_python
+          --     initialize_params.initializeOptions = {
+          --       settings = {
+          --         python = {
+          --           pythonPath = venv_python,
+          --         },
+          --       },
+          --     }
+          --   end
+          -- end,
           settings = {
             basedpyright = {
               disableOrganizedImports = true,
@@ -852,21 +921,6 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
