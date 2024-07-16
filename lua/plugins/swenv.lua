@@ -31,5 +31,42 @@ return {
         client.notify('workspace/didChangeConfiguration', { settings = nil })
       end,
     },
+    config = function(_, opts)
+      require('swenv').setup(opts)
+      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+        callback = function(nested_opts)
+          if vim.bo[nested_opts.buf].filetype == 'python' then
+            local venv_path = nil
+            local dir_template = '%:p:h'
+            local dir_to_check = nil
+            while not venv_path and dir_to_check ~= '/' do
+              dir_to_check = vim.fn.expand(dir_template)
+              if vim.fn.filereadable(dir_to_check .. '/.venv') == 1 then
+                venv_path = dir_to_check .. '/.venv'
+              else
+                dir_template = dir_template .. ':h'
+              end
+            end
+            if venv_path then
+              local venv_file = io.open(venv_path)
+              if venv_file then
+                local swenv_api = require 'swenv.api'
+                local current_venv_name = nil
+                local current_venv = swenv_api.get_current_venv()
+                if current_venv then
+                  current_venv_name = current_venv.name
+                end
+                local ws_venv = string.gsub(venv_file:read '*a', '%s+', '')
+                if ws_venv ~= current_venv_name then
+                  swenv_api.set_venv(ws_venv)
+                end
+                venv_file:close()
+              end
+            end
+          end
+        end,
+        group = vim.api.nvim_create_augroup('python_venv', { clear = true }),
+      })
+    end,
   },
 }

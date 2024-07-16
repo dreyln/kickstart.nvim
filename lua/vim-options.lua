@@ -6,6 +6,9 @@ vim.g.have_nerd_font = true
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.writebackup = false
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.

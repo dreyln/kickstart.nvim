@@ -21,9 +21,12 @@ return {
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
       -- vim.lsp.set_log_level 'debug'
+      vim.diagnostic.config { virtual_text = false }
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
+          require('lsp_signature').on_attach({}, event.buf)
+
           -- NOTE: Remember that Lua is a real programming language, and as such it is possible
           -- to define small helper and utility functions so you don't have to repeat yourself.
           --
@@ -193,5 +196,20 @@ return {
         },
       }
     end,
+  },
+  {
+    'ray-x/lsp_signature.nvim',
+  },
+  {
+    'dreyln/corn.nvim',
+    event = 'VeryLazy',
+    opts = {
+      on_toggle = function(_)
+        vim.diagnostic.config { virtual_text = not vim.diagnostic.config().virtual_text }
+      end,
+      item_preprocess_func = function(item)
+        return item
+      end,
+    },
   },
 }
