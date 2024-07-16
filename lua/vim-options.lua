@@ -66,6 +66,33 @@ vim.opt.scrolloff = 5
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+--  From Josh
+vim.opt.termguicolors = true
+vim.opt.encoding = 'utf-8'
+vim.opt.backspace = { 'indent', 'eol', 'start' }
+if os.getenv 'SSH_CONNECTION' then
+  vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+      ['+'] = require('vim.ui.clipboard.osc52').copy '+',
+      ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+    },
+    paste = {
+      ['+'] = require('vim.ui.clipboard.osc52').paste '+',
+      ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+    },
+  }
+end
+-- keep selection on indenting lines
+vim.keymap.set('v', '>', '>gv')
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('n', 'Y', 'y$') -- Y yank until the end of line
+vim.keymap.set('n', 'vv', 'vg_') -- vv visual to end of characters
+vim.keymap.set('n', '$', 'g_') -- don't copy white space when using $
+-- keep centered while jumping around in search/J
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
+
 -- From ThePrimeagen
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
