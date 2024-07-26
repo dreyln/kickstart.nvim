@@ -18,14 +18,7 @@ return {
       { '<F7>', dap.step_into, desc = 'Debug: Step Into' },
       { '<F8>', dap.step_over, desc = 'Debug: Step Over' },
       { '<F9>', dap.step_out, desc = 'Debug: Step Out' },
-      { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
-      {
-        '<leader>B',
-        function()
-          dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-        end,
-        desc = 'Debug: Set Breakpoint',
-      },
+      { '<leader>tB', dap.toggle_breakpoint, desc = '[T]oggle [B]reakpoint' },
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
       { '<F6>', dapui.toggle, desc = 'Debug: See last session result.' },
       unpack(keys),
@@ -46,7 +39,6 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
       },
     }
 

@@ -7,8 +7,9 @@ return {
 
       -- Document existing key chains
       require('which-key').add {
+        { '<leader>b', group = '[B]uffer' },
         { '<leader>c', group = '[C]ode' },
-        { '<leader>d', group = '[D]ocument' },
+        { '<leader>d', group = '[D]ebug' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
