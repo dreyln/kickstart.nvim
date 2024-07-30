@@ -35,7 +35,8 @@ return {
       require('swenv').setup(opts)
       vim.api.nvim_create_autocmd({ 'BufEnter' }, {
         callback = function(nested_opts)
-          if vim.bo[nested_opts.buf].filetype == 'python' then
+          local isRealPath = vim.fn.expand('%:p:h'):sub(1, 1) == '/'
+          if isRealPath and vim.bo[nested_opts.buf].filetype == 'python' then
             local venv_path = nil
             local dir_template = '%:p:h'
             local dir_to_check = nil
