@@ -31,7 +31,6 @@ return {
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
       -- vim.lsp.set_log_level 'debug'
-      vim.diagnostic.config { virtual_text = false }
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -46,6 +45,12 @@ return {
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
+          map('<leader>tv', function()
+            local current_value = vim.diagnostic.config().virtual_text
+            vim.diagnostic.config {
+              virtual_text = not current_value,
+            }
+          end, '[T]oggle [V]irtual Text')
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
@@ -171,7 +176,7 @@ return {
             },
           },
         },
-        tsserver = {},
+        ts_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
