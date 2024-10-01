@@ -5,6 +5,7 @@ vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
+vim.opt.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 
 vim.opt.swapfile = false
 vim.opt.backup = false

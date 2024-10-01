@@ -141,6 +141,9 @@ return {
               client.config.settings.python.pythonPath = venv_python
             end
           end,
+          on_attach = function(client, bufnr)
+            require('nvim-navic').attach(client, bufnr)
+          end,
           settings = {
             basedpyright = {
               typeCheckingMode = 'standard',
@@ -206,6 +209,9 @@ return {
   },
   {
     'ray-x/lsp_signature.nvim',
+  },
+  {
+    'SmiteshP/nvim-navic',
   },
   -- {
   --   'dreyln/corn.nvim',
