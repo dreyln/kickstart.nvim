@@ -45,7 +45,7 @@ return {
 
       -- Dap UI setup
       -- For more information, see |:help nvim-dap-ui|
-      dapui.setup {
+      dapui.setup { ---@diagnostic disable-line: missing-fields
         -- Set icons to characters that are more likely to work in every terminal.
         --    Feel free to remove or use ones that you like more! :)
         --    Don't feel like these are good choices.
@@ -62,8 +62,13 @@ return {
     dependencies = 'mfussenegger/nvim-dap',
     config = function()
       -- uses the debugypy installation by mason
-      local debugpyPythonPath = require('mason-registry').get_package('debugpy'):get_install_path() .. '/venv/bin/python3'
-      require('dap-python').setup(debugpyPythonPath, {}) ---@diagnostic disable-line: missing-fields
+      local debugpy_python_path = require('mason-registry').get_package('debugpy'):get_install_path() .. '/venv/bin/python3'
+      local dap_python = require 'dap-python'
+      dap_python.setup(debugpy_python_path, {}) ---@diagnostic disable-line: missing-fields
+      dap_python.test_runner = 'pytest'
+      vim.keymap.set({ 'n', 'v' }, '<Leader>Dt', function()
+        dap_python.test_method()
+      end, { desc = 'Run unit test' })
     end,
   },
 }
