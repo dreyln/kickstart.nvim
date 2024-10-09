@@ -31,6 +31,7 @@ return {
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
       -- vim.lsp.set_log_level 'debug'
+      vim.diagnostic.config { virtual_text = false }
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -179,7 +180,7 @@ return {
             },
           },
         },
-        ts_ls = {},
+        tsserver = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -214,6 +215,13 @@ return {
   },
   {
     'ray-x/lsp_signature.nvim',
+  },
+  {
+    'rachartier/tiny-inline-diagnostic.nvim',
+    event = 'VeryLazy', -- Or `LspAttach`
+    config = function()
+      require('tiny-inline-diagnostic').setup()
+    end,
   },
   {
     'SmiteshP/nvim-navic',
