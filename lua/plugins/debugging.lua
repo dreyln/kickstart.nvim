@@ -21,6 +21,7 @@ return {
         { '<leader>tB', dap.toggle_breakpoint, desc = '[T]oggle [B]reakpoint' },
         -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
         { '<F6>', dapui.toggle, desc = 'Debug: See last session result.' },
+        { '<leader>Di', dapui.eval, desc = 'Debug: Evaluate expression.' },
         unpack(keys),
       }
     end,
