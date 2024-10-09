@@ -14,14 +14,14 @@ return {
       local dapui = require 'dapui'
       return {
         -- Basic debugging keymaps, feel free to change to your liking!
-        { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
-        { '<F7>', dap.step_into, desc = 'Debug: Step Into' },
-        { '<F8>', dap.step_over, desc = 'Debug: Step Over' },
-        { '<F9>', dap.step_out, desc = 'Debug: Step Out' },
+        { '<F5>',       dap.continue,          desc = 'Debug: Start/Continue' },
+        { '<F7>',       dap.step_into,         desc = 'Debug: Step Into' },
+        { '<F8>',       dap.step_over,         desc = 'Debug: Step Over' },
+        { '<F9>',       dap.step_out,          desc = 'Debug: Step Out' },
         { '<leader>tB', dap.toggle_breakpoint, desc = '[T]oggle [B]reakpoint' },
         -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-        { '<F6>', dapui.toggle, desc = 'Debug: See last session result.' },
-        { '<leader>Di', dapui.eval, desc = 'Debug: Evaluate expression.' },
+        { '<F6>',       dapui.toggle,          desc = 'Debug: See last session result.' },
+        { '<leader>Di', dapui.eval,            desc = 'Debug: Evaluate expression.' },
         unpack(keys),
       }
     end,
@@ -63,12 +63,13 @@ return {
     dependencies = 'mfussenegger/nvim-dap',
     config = function()
       -- uses the debugypy installation by mason
-      local debugpy_python_path = require('mason-registry').get_package('debugpy'):get_install_path() .. '/venv/bin/python3'
+      local debugpy_python_path = require('mason-registry').get_package('debugpy'):get_install_path() ..
+          '/venv/bin/python3'
       local dap_python = require 'dap-python'
       dap_python.setup(debugpy_python_path, {}) ---@diagnostic disable-line: missing-fields
       dap_python.test_runner = 'pytest'
       vim.keymap.set({ 'n', 'v' }, '<Leader>Dt', function()
-        dap_python.test_method()
+        dap_python.test_method({ config = { justMyCode = false } })
       end, { desc = 'Run unit test' })
     end,
   },
