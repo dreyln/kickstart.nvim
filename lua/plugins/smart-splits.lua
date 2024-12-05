@@ -1,6 +1,7 @@
 return {
   {
     'mrjones2014/smart-splits.nvim',
+    event = 'VimEnter',
     keys = {
       -- moving between splits
       {
