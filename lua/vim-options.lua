@@ -71,19 +71,17 @@ vim.opt.scrolloff = 5
 vim.opt.termguicolors = true
 vim.opt.encoding = 'utf-8'
 vim.opt.backspace = { 'indent', 'eol', 'start' }
-if os.getenv 'SSH_CONNECTION' then
-  vim.g.clipboard = {
-    name = 'OSC 52',
-    copy = {
-      ['+'] = require('vim.ui.clipboard.osc52').copy '+',
-      ['*'] = require('vim.ui.clipboard.osc52').copy '*',
-    },
-    paste = {
-      ['+'] = require('vim.ui.clipboard.osc52').paste '+',
-      ['*'] = require('vim.ui.clipboard.osc52').paste '*',
-    },
-  }
-end
+-- vim.g.clipboard = {
+--   name = 'OSC 52',
+--   copy = {
+--     ['+'] = require('vim.ui.clipboard.osc52').copy,
+--     ['*'] = require('vim.ui.clipboard.osc52').copy,
+--   },
+--   paste = {
+--     ['+'] = require('vim.ui.clipboard.osc52').paste,
+--     ['*'] = require('vim.ui.clipboard.osc52').paste,
+--   },
+-- }
 -- keep selection on indenting lines
 vim.keymap.set('v', '>', '>gv')
 vim.keymap.set('v', '<', '<gv')

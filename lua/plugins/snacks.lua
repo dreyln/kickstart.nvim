@@ -9,7 +9,23 @@ return {
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
       bigfile = { enabled = true },
-      dashboard = { enabled = true },
+      dashboard = {
+        sections = {
+          { section = "header" },
+          { section = "keys", gap = 1, padding = 1 },
+          {
+            icon = "",
+            desc = "Database",
+            padding = 1,
+            key = "d",
+            action = function()
+              vim.cmd('ene')
+              vim.cmd('DBUI')
+            end,
+          },
+          { section = "startup" },
+        },
+      },
       indent = { enabled = true },
       input = { enabled = true },
       notifier = { enabled = true },
