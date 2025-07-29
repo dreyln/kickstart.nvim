@@ -152,7 +152,10 @@ return {
           end,
           settings = {
             basedpyright = {
-              typeCheckingMode = 'standard',
+              analysis = {
+                diagnosticMode = 'openFilesOnly',
+                typeCheckingMode = 'standard',
+              },
               disableOrganizedImports = true,
             },
             python = {
