@@ -1,0 +1,7 @@
+---@type vim.lsp.Config
+return {
+  filetypes = { 'python' },
+  settings = {},
+  cmd = { 'ruff', 'server' },
+  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
+}

@@ -12,6 +12,7 @@ vim.opt.rtp:prepend(lazypath)
 
 -- [[ Setup options and keymaps ]]
 require 'vim-options'
+require 'autocmd'
 
 -- [[ Setup lazy and other plugins ]]
 require('lazy').setup('plugins', {
@@ -38,6 +39,8 @@ require('lazy').setup('plugins', {
     },
   },
 })
+
+require 'lspextra'
 
 -- :lua vim.diagnostic.show(nil, nil,nil, {virtual_text={source=true}})
 

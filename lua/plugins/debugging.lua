@@ -5,9 +5,6 @@ return {
       'rcarriga/nvim-dap-ui',
       -- Required dependency for nvim-dap-ui
       'nvim-neotest/nvim-nio',
-      -- Installs the debug adapters for you
-      'williamboman/mason.nvim',
-      'jay-babu/mason-nvim-dap.nvim',
     },
     keys = function(_, keys)
       local dap = require 'dap'
@@ -29,21 +26,6 @@ return {
     config = function()
       local dap = require 'dap'
       local dapui = require 'dapui'
-
-      require('mason-nvim-dap').setup {
-        -- Makes a best effort to setup the various debuggers with
-        -- reasonable debug configurations
-        automatic_installation = true,
-        -- You can provide additional configuration to the handlers,
-        -- see mason-nvim-dap README for more information
-        handlers = {},
-        -- You'll need to check that you have the required things installed
-        -- online, please don't ask me how to install them :)
-        ensure_installed = {
-          -- Update this to ensure that you have the debuggers for the langs you want
-          'python',
-        },
-      }
 
       -- Dap UI setup
       -- For more information, see |:help nvim-dap-ui|
@@ -76,8 +58,8 @@ return {
     'mfussenegger/nvim-dap-python',
     dependencies = 'mfussenegger/nvim-dap',
     config = function()
-      -- uses the debugypy installation by mason
-      local debugpy_python_path = require('mason-registry').get_package('debugpy'):get_install_path() .. '/venv/bin/python3'
+      -- venv with debugpy installed
+      local debugpy_python_path = vim.fn.expand '~/sd/debugpy' .. '/.venv/bin/python'
       local dap_python = require 'dap-python'
       dap_python.setup(debugpy_python_path, {}) ---@diagnostic disable-line: missing-fields
       dap_python.test_runner = 'pytest'
